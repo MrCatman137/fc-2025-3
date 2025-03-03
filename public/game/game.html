@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <link rel="stylesheet" href="game.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="leftContainer">
+            <canvas id="coinCanvas" width="100" height="100"></canvas> <!-- Канвас для монетки -->
+        </div>
+        <div id="gameWrapper">
+            <canvas id="gameCanvas" width="500" height="500"></canvas>
+            <div id="controls">
+                <button id="saveButton">Save Game</button>
+            </div>
+        </div>
+        <div id="rightContainer">
+            <canvas id="emptyCanvas" width="100" height="100"></canvas> <!-- Порожній канвас -->
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

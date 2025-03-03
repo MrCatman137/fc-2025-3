@@ -1,12 +1,7 @@
 [
   {
-    "id": "2a23437b-b13e-4168-aafd-737bb42b5ff8",
+    "id": "ed0a5089-78ec-4ada-85d3-a27ce007e7ae",
     "name": "Colan",
-    "password": "$2b$10$GdRqOApE3ogVbgtLjZb0hetRc94g4P.TmFuUaBCukJENJp7eqrIiq"
-  },
-  {
-    "id": "f8d9cc2c-d82e-4c8d-8b63-8ae118ccb3ba",
-    "name": "Colan",
-    "password": "$2b$10$db1qInpdagzXvPN0tcw/W.UeyMSKK.snIw2N8o9RyE1GvKiKVt59u"
+    "password": "$2b$10$cBN9Y/agJIPBmboMyVLivOTZRSP926fICugO4tt7D3vgn9WUaDhFu"
   }
 ]

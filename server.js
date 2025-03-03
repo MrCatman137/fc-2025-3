@@ -75,16 +75,80 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/log", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "log.html"))
+    res.sendFile(path.join(__dirname, "public","log", "log.html"))
+})
+
+app.get("/", (req, res) => {
+    res.redirect("/log");
 })
 
 app.get("/game", (req,res) => {
-    res.sendFile(path.join(__dirname, "public", "log.html"))
+    res.sendFile(path.join(__dirname, "public", "game", "game.html"))
 })
 
 app.get("/game_info", (req, res) => {
-    
+    fs.readFile(path.join(__dirname, "game_data.json"), "utf8", (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: "Failed to read game data" });
+        }
+        res.status(200).json(JSON.parse(data));
+    })
 })
+
+app.get("/user_info/:id", (req,res) => {
+    const userId = req.params.id;
+
+    
+    fs.readFile(path.join(__dirname, "user_results.json"), "utf8", (err, data) => {
+        if (err && err.code !== "ENOENT") {
+            return res.status(500).json({ error: "Failed to read user results" });
+        }
+
+        const userResults = data ? JSON.parse(data) : {};
+
+        if (userResults[userId]) {
+            res.status(200).json(userResults[userId]);
+        } else {
+            const newGameData = {
+                player: { x: 50, y: 90, coins: 0},
+                userId: userId
+            };
+
+            userResults[userId] = newGameData;
+            fs.writeFile(path.join(__dirname, "user_results.json"), JSON.stringify(userResults, null, 2), (err) => {
+                if (err) {
+                    return res.status(500).json({ error: "Failed to save game data" });
+                }
+                res.status(200).json(newGameData);
+            });
+        }
+    });
+})
+
+app.put("/save_game/:id", (req, res) => {
+    const userId = req.params.id;
+    const {player} = req.body;
+
+    fs.readFile(path.join(__dirname, "user_results.json"), "utf8", (err, data) => {
+        if (err && err.code !== "ENOENT") {
+            return res.status(500).json({ error: "Failed to read user results" });
+        }
+
+        const userResults = data ? JSON.parse(data) : {};
+
+        userResults[userId] = {
+            player
+        };
+
+        fs.writeFile(path.join(__dirname, "user_results.json"), JSON.stringify(userResults, null, 2), (err) => {
+            if (err) {
+                return res.status(500).json({ error: "Failed to save game data" });
+            }
+            res.status(200).json({ message: "Game saved successfully" });
+        });
+    });
+})
+
 app.listen(PORT, () => {
     console.log(`localhost:${PORT}`);
 });

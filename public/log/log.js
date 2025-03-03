@@ -1,4 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const userId = localStorage.getItem("userId");
+
+    if (userId) {
+        window.location.href = "/game";
+        return;
+    }
+    
     const form = document.getElementById("auth-form");
     const nameInput = document.getElementById("name");
     const passwordInput = document.getElementById("password");
@@ -8,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formTitle = document.getElementById("form-title");
 
     let isLogin = true; // Початково — форма логіну
+
 
     function updateForm() {
         if (isLogin) {
@@ -58,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (isLogin) {
                 localStorage.setItem("userId", data.id);
-                window.location.href = "game";
+                window.location.href = "/game";
             } else {
                 isLogin = true;
                 updateForm();
