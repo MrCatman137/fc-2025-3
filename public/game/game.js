@@ -42,6 +42,9 @@ window.onload = function () {
     const coinSprite = new Image();
     coinSprite.src = "texture/coin.png";
     
+    const thiefSprite = new Image();
+    thiefSprite.src = "texture/thief.png";
+
     let player = {
         x: 50,
         y: 90,
@@ -59,6 +62,7 @@ window.onload = function () {
     window.addEventListener("keyup", (e) => keys[e.key] = false);
     
     let objects = [];
+    let thief = []
     let coins = [];
     let space = [];
     let walls = [];
@@ -157,6 +161,132 @@ window.onload = function () {
             coins.push(newCoin);
         }
     }
+
+    let thiefIdCounter = 0; 
+
+function spawnThief() {
+    const maxThieves = 3; 
+    if (thief.length < maxThieves) {
+        let randomX, randomY;
+        const radius = 50;
+
+        do {
+            do {
+                randomX = Math.floor(Math.random() * 25);
+                randomY = Math.floor(Math.random() * 25);
+            } while (space[randomY][randomX] === 0);
+
+            new_xc = 10 + randomX * 20;
+            new_yc = 10 + randomY * 20;
+
+        } while (
+            (player.x - player.size / 2 - radius < new_xc) &&
+            (player.x + player.size / 2 + radius > new_xc) &&
+            (player.y - player.size / 2 - radius < new_yc) &&
+            (player.y + player.size / 2 + radius > new_yc)
+        );
+
+        let newThief = { id: thiefIdCounter++, xc: new_xc, yc: new_yc, size: 10, angular: 0, dx: 0, dy: 0};
+        thief.push(newThief); 
+
+        setTimeout(() => {
+            let index = thief.findIndex(t => t.id === newThief.id);
+            if (index !== -1) {
+                thief.splice(index, 1);
+            }
+        }, 7000);
+    }
+}
+
+const visionThief = 40; 
+const thiefSpeed = 0.8;  
+
+function checkThiefCollision(x, y) {
+    let thiefSize = 10; 
+    let thiefLeft = x - thiefSize / 2, thiefRight = x + thiefSize / 2;
+    let thiefTop = y - thiefSize / 2, thiefBottom = y + thiefSize / 2;
+
+    for (let wall of walls) {
+        if (
+            thiefRight > wall.x1 && thiefLeft < wall.x2 &&
+            thiefBottom > wall.y1 && thiefTop < wall.y2
+        ) {
+            return true;
+        }
+    }
+
+    for (let object of objects) {
+        if (
+            thiefRight > object.xc - object.size / 2 && thiefLeft < object.xc + object.size / 2 &&
+            thiefBottom > object.yc - object.size / 2 && thiefTop < object.yc + object.size / 2
+        ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+function moveThief() {
+    for (let thiefty of thief) {
+        let dx = player.x - thiefty.xc;
+        let dy = player.y - thiefty.yc;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < visionThief) {
+            let newX = thiefty.xc + (dx / distance) * thiefSpeed;
+            let newY = thiefty.yc + (dy / distance) * thiefSpeed;
+
+            let canMoveX = !checkThiefCollision(newX, thiefty.yc);
+            let canMoveY = !checkThiefCollision(thiefty.xc, newY);
+
+            if (canMoveX && canMoveY) {
+                thiefty.dx = thiefty.xc - newX;
+                thiefty.dy = thiefty.yc - newY;
+                
+                thiefty.xc = newX;
+                thiefty.yc = newY;
+            } else if (canMoveX) {
+                thiefty.dx = thiefty.xc - newX;
+                thiefty.dy = thiefty.yc - newY;
+                thiefty.xc = newX;
+            } else if (canMoveY) {
+                thiefty.dx = thiefty.xc - newX;
+                thiefty.dy = thiefty.yc - newY;
+                thiefty.yc = newY;
+            } else {
+                thiefty.dx = thiefty.xc - newX;
+                thiefty.dy = thiefty.yc - newY;
+            }
+        }
+
+        let playerLeft = player.x - player.size / 2;
+        let playerRight = player.x + player.size / 2;
+        let playerTop = player.y - player.size / 2;
+        let playerBottom = player.y + player.size / 2;
+
+        if (
+            thiefty.xc + thiefty.size / 2 > playerLeft &&
+            thiefty.xc - thiefty.size / 2 < playerRight &&
+            thiefty.yc + thiefty.size / 2 > playerTop &&
+            thiefty.yc - thiefty.size / 2 < playerBottom
+        ) {
+            let distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
+            if (distanceToPlayer <= 10) {
+                let stolenAmount = player.coins >= 100 ? 100 : player.coins;
+                player.coins -= stolenAmount;
+
+                let index = thief.findIndex(t => t.id === thiefty.id);
+                if (index !== -1) {
+                    thief.splice(index, 1);
+                }
+            }
+        }
+    }
+}
+
+
 
     
     function drawSpace() {
@@ -284,7 +414,24 @@ window.onload = function () {
         }
     }
 
-    function drawCoinsAndScore() {
+    function drawThief() {
+        for (let thiefy of thief) {
+            if (thiefy.dx !== 0 || thiefy.dy !== 0) { 
+                let dx = player.x - thiefy.xc;
+                let dy = player.y - thiefy.yc;
+                let angle = Math.atan2(dy, dx); 
+                thiefy.angle = angle + Math.PI/2; 
+            }
+
+            
+            ctx.save(); 
+            ctx.translate(thiefy.xc, thiefy.yc); 
+            ctx.rotate(thiefy.angle); 
+            ctx.drawImage(thiefSprite, -thiefy.size / 2, -thiefy.size / 2, thiefy.size, thiefy.size);
+            ctx.restore();
+        }
+    }
+   function drawCoinsAndScore() {
         
         ctxObject.clearRect(0, 0, objectCanvas.width, objectCanvas.height);
         ctxObject.fillStyle = "black";
@@ -314,7 +461,7 @@ window.onload = function () {
                 player.coins -= 150;
                 player.speed += 0.1;
                 console.log("Speed upgraded:", player.vision);
-                if (player.speed + 0.01 > 1) {
+                if (!(player.speed + 0.05 < 1.5)) {
                     maxspeed = true
                 }
             }
@@ -398,15 +545,8 @@ window.onload = function () {
         
     function drawPlayer() {
         
-        if (player.dy < 0) { 
-            angle = 0; 
-        } else if (player.dy > 0) { 
-            angle = Math.PI; 
-        } else if (player.dx < 0) { 
-            angle = -Math.PI / 2; 
-        } else if (player.dx > 0){
-            angle = Math.PI / 2;    
-        }
+        if(!(player.dx == 0 && player.dy == 0)) 
+            angle = Math.atan2(player.dy, player.dx) + Math.PI/2;
 
         ctx.save();
         ctx.translate(player.x, player.y); 
@@ -435,11 +575,16 @@ window.onload = function () {
         ctx.translate(-player.x, -player.y);
         
         ctx.drawImage(mapImage, 0, 0);
+        
         //drawWalls(); 
+        //drawSpace()
+        
         drawObjects();
         spawnCoin();
         drawCoins();
-        //drawSpace()
+        spawnThief();
+        moveThief();
+        drawThief();
         updatePlayerMovement();
         drawShop();
         

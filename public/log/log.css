@@ -4,23 +4,24 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: azure;
+    background-color: black;
 }
 
 .container {
-    background: white;
+    background: rgb(58, 58, 58);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(95, 95, 95, 0.1);
     text-align: center;
     width: 300px;
+    color: white;
 }
 
 input {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
-    border: 1px solid #ddd;
+    border: 1px solid #3e3e3e;
     border-radius: 5px;
     box-sizing: border-box;
 }
@@ -28,7 +29,7 @@ input {
 button {
     width: 50%;
     padding: 10px;
-    background:  cadetblue;
+    background:  rgb(44, 44, 44);
     color: white;
     border: none;
     border-radius: 5px;
@@ -36,7 +37,7 @@ button {
 }
 
 button:hover {
-    background: #218838;
+    background: #4a4a4a;
 }
 
 #toggle-text {
@@ -44,7 +45,7 @@ button:hover {
 }
 
 #toggle-text a {
-    color: #007bff;
+    color: #c0c0c0;
     cursor: pointer;
     text-decoration: none;
 }
