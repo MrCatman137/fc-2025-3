@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const responseMessage = document.getElementById("response-message");
     const formTitle = document.getElementById("form-title");
 
-    let isLogin = true; // Початково — форма логіну
+    let isLogin = true; 
 
 
     function updateForm() {
@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleText.innerHTML = `Have an account? <a href="#" id="toggle-link">Log in</a>`;
         }
 
-        // Додаємо подію заново, бо innerHTML перезаписав старий елемент
         document.getElementById("toggle-link").addEventListener("click", (e) => {
             e.preventDefault();
             isLogin = !isLogin;
@@ -36,9 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    updateForm(); // Запускаємо оновлення форми
-
-    // Обробка форми (логін або реєстрація)
+    updateForm(); 
+    
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -63,19 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
             responseMessage.textContent = data.message;
             responseMessage.style.color = "green";
-
-            if (isLogin) {
-                localStorage.setItem("userId", data.id);
-                window.location.href = "/game";
-            } else {
-                isLogin = true;
-                updateForm();
-                responseMessage.textContent = "Registration success.";
-                responseMessage.style.color = "blue";
-            }
-        } else {
-            responseMessage.textContent = data.error;
-            responseMessage.style.color = "red";
+            localStorage.setItem("userId", data.id);
+            window.location.href = "/game";
         }
     });
 });

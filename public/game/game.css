@@ -1,9 +1,9 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: black;
     text-align: center;
-    margin: 0; /* Видаляти відступи */
-    height: 100vh; /* Висота екрану */
+    margin: 0; 
+    height: 100vh; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,7 +13,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%; /* Повна ширина для центрованого контенту */
+    width: 100%; 
 }
 
 #leftContainer, #rightContainer {
@@ -28,26 +28,28 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column; /* Розташовуємо елементи вертикально */
+    flex-direction: column; 
 }
 
 #coinCanvas {
     border: 1px solid black;
-    margin-right: 10px; /* Відстань між канвасами */
+    margin-right: 10px; 
 }
 
-#emptyCanvas {
+#shopCanvas {
     border: 1px solid black;
-    margin-left: 10px; /* Відстань між канвасами */
+    margin-left: 10px; 
 }
 
 #controls {
     margin-top: 20px;
     display: flex;
-    justify-content: center; /* Центруємо кнопку */
+    justify-content: center; 
 }
 
 button {
+    margin: 10px;
+    background-color: gray;
     padding: 10px 20px;
     font-size: 16px;
 }

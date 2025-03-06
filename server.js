@@ -110,7 +110,7 @@ app.get("/user_info/:id", (req,res) => {
             res.status(200).json(userResults[userId]);
         } else {
             const newGameData = {
-                player: { x: 50, y: 90, coins: 0},
+                player: { x: 50, y: 90, coins: 0, speed: 0.5, vision: 5},
                 userId: userId
             };
 
